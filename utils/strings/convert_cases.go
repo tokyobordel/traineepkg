@@ -5,7 +5,7 @@ import (
 	"strings"
 	"unicode"
 
-	"traineepkg/errors"
+	"github.com/tokyobordel/traineepkg/errors"
 )
 
 func PascalToUpperSnakeCase(input string) (string, errors.DomainError) {

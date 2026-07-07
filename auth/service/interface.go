@@ -1,6 +1,6 @@
 package service
 
-import "traineepkg/models"
+import "github.com/tokyobordel/traineepkg/models"
 
 type IAuthService interface {
 	Login(pass string, login string) (models.User, error)

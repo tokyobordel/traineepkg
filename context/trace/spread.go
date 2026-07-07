@@ -3,8 +3,8 @@ package trace
 import (
 	"context"
 
-	pkgContext "traineepkg/context"
-	"traineepkg/trace"
+	pkgContext "github.com/tokyobordel/traineepkg/context"
+	"github.com/tokyobordel/traineepkg/trace"
 )
 
 const SpreadKey pkgContext.CtxKey = "traceSpread"

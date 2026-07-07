@@ -3,7 +3,7 @@ package logger
 import (
 	"context"
 
-	"traineepkg/context/trace"
+	"github.com/tokyobordel/traineepkg/context/trace"
 )
 
 // ExampleUsage демонстрирует использование ContextLogger

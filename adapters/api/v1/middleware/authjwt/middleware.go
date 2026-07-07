@@ -5,10 +5,10 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"traineepkg/adapters/api/v1/response"
-	jwtAuth "traineepkg/authorization/jwt"
-	"traineepkg/errors"
-	"traineepkg/logger"
+	"github.com/tokyobordel/traineepkg/adapters/api/v1/response"
+	jwtAuth "github.com/tokyobordel/traineepkg/authorization/jwt"
+	"github.com/tokyobordel/traineepkg/errors"
+	"github.com/tokyobordel/traineepkg/logger"
 )
 
 type ctxKey string

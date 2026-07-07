@@ -1,6 +1,6 @@
 package auth
 
-import "traineepkg/models"
+import "github.com/tokyobordel/traineepkg/models"
 
 type credentialsRequest struct {
 	Login string `json:"login"`

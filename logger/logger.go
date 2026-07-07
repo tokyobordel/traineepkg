@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/sirupsen/logrus"
-	"traineepkg/context/trace"
+	"github.com/tokyobordel/traineepkg/context/trace"
 )
 
 const criticalFieldKey = "_critical"

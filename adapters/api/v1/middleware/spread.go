@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	contextTrace "traineepkg/context/trace"
-	"traineepkg/logger"
+	contextTrace "github.com/tokyobordel/traineepkg/context/trace"
+	"github.com/tokyobordel/traineepkg/logger"
 
 	"github.com/gofiber/fiber/v2"
 )

@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"traineepkg/errors"
-	"traineepkg/logger"
+	"github.com/tokyobordel/traineepkg/errors"
+	"github.com/tokyobordel/traineepkg/logger"
 )
 
 // mapDomainErrorToHTTPStatus сопоставляет доменные ошибки с HTTP статус кодами
