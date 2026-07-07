@@ -1,4 +1,4 @@
-module traineepkg
+module github.com/tokyobordel/traineepkg
 
 go 1.26.4
 
