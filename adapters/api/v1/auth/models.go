@@ -1,6 +1,6 @@
 package auth
 
-import "traineesheep/imageservice/pkg/models"
+import "traineepkg/models"
 
 type credentialsRequest struct {
 	Login string `json:"login"`

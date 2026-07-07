@@ -1,6 +1,6 @@
 package service
 
-import "traineesheep/imageservice/pkg/models"
+import "traineepkg/models"
 
 type IAuthService interface {
 	Login(pass string, login string) (models.User, error)

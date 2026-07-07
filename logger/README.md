@@ -27,7 +27,7 @@ contextLogger := logger.NewContextLoggerFromLogger(existingLogger)
 ### Добавление spread в контекст
 
 ```go
-import "traineesheep/imageservice/pkg/context/trace"
+import "traineepkg/context/trace"
 
 // Создание контекста со spread
 ctx := context.Background()

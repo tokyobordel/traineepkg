@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"traineesheep/imageservice/pkg/context/trace"
+	"traineepkg/context/trace"
 )
 
 func makeEnvelope(c *fiber.Ctx, data interface{}, success bool, errMessage string) fiber.Map {

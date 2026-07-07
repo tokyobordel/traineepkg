@@ -3,8 +3,8 @@ package trace
 import (
 	"context"
 
-	pkgContext "traineesheep/imageservice/pkg/context"
-	"traineesheep/imageservice/pkg/trace"
+	pkgContext "traineepkg/context"
+	"traineepkg/trace"
 )
 
 const SpreadKey pkgContext.CtxKey = "traceSpread"

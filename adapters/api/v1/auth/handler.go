@@ -5,11 +5,11 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"traineesheep/imageservice/pkg/adapters/api/v1/response"
-	authService "traineesheep/imageservice/pkg/auth/service"
-	jwtAuth "traineesheep/imageservice/pkg/authorization/jwt"
-	"traineesheep/imageservice/pkg/errors"
-	"traineesheep/imageservice/pkg/logger"
+	"traineepkg/adapters/api/v1/response"
+	authService "traineepkg/auth/service"
+	jwtAuth "traineepkg/authorization/jwt"
+	"traineepkg/errors"
+	"traineepkg/logger"
 )
 
 type Handler struct {

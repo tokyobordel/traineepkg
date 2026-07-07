@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	contextTrace "traineesheep/imageservice/pkg/context/trace"
-	"traineesheep/imageservice/pkg/logger"
+	contextTrace "traineepkg/context/trace"
+	"traineepkg/logger"
 
 	"github.com/gofiber/fiber/v2"
 )

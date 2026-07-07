@@ -3,7 +3,7 @@ package logger
 import (
 	"context"
 
-	"traineesheep/imageservice/pkg/context/trace"
+	"traineepkg/context/trace"
 )
 
 // ExampleUsage демонстрирует использование ContextLogger

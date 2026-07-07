@@ -5,7 +5,7 @@ import (
 	"strings"
 	"unicode"
 
-	"traineesheep/imageservice/pkg/errors"
+	"traineepkg/errors"
 )
 
 func PascalToUpperSnakeCase(input string) (string, errors.DomainError) {

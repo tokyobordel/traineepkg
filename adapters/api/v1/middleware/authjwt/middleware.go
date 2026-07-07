@@ -5,10 +5,10 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"traineesheep/imageservice/pkg/adapters/api/v1/response"
-	jwtAuth "traineesheep/imageservice/pkg/authorization/jwt"
-	"traineesheep/imageservice/pkg/errors"
-	"traineesheep/imageservice/pkg/logger"
+	"traineepkg/adapters/api/v1/response"
+	jwtAuth "traineepkg/authorization/jwt"
+	"traineepkg/errors"
+	"traineepkg/logger"
 )
 
 type ctxKey string

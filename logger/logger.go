@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/sirupsen/logrus"
-	"traineesheep/imageservice/pkg/context/trace"
+	"traineepkg/context/trace"
 )
 
 const criticalFieldKey = "_critical"
