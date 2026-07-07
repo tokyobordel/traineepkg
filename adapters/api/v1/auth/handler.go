@@ -82,7 +82,7 @@ func (h *Handler) Refresh(c *fiber.Ctx) error {
 		return nil
 	}
 
-	user, getMeErr := h.authService.Get_me(userID)
+	user, getMeErr := h.authService.GetMe(userID)
 	if getMeErr != nil {
 		response.MakeErrorResponse(c, h.logger, getMeErr)
 		return nil
