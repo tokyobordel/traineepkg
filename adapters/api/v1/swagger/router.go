@@ -8,7 +8,7 @@ import (
 )
 
 // SetupRouter подключает Swagger UI к Fiber-приложению.
-// Документация доступна по адресу /swagger/index.html.
+// Документация доступна по адресу /auth/swagger/index.html.
 func SetupRouter(app *fiber.App) {
-	app.Get("/swagger/*", swagger.HandlerDefault)
+	app.Get("/auth/swagger/*", swagger.HandlerDefault)
 }
