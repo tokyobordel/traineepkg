@@ -2,6 +2,7 @@ package authjwt
 
 import (
 	"context"
+	"time"
 
 	"github.com/gofiber/fiber/v3"
 
@@ -26,17 +27,44 @@ func NewMiddleware(jwtService *jwtAuth.Service) *Middleware {
 
 func (m *Middleware) RequireAccessToken() fiber.Handler {
 	return func(c fiber.Ctx) error {
-		token := c.Cookies(jwtAuth.AccessTokenCookieName)
-		if token == "" {
+		accessToken := c.Cookies(jwtAuth.AccessTokenCookieName)
+		if accessToken == "" {
 			response.MakeErrorResponse(c, nil, errors.NewAuthTokenError(errors.TokenNotFound))
 			return nil
 		}
 
-		userID, err := m.jwtService.ValidateAccessToken(token)
-		if err != nil {
-			response.MakeErrorResponse(c, nil, errors.NewAuthTokenError(errors.InvalidToken))
+		refreshToken := c.Cookies(jwtAuth.RefreshTokenCookieName)
+		if accessToken == "" {
+			response.MakeErrorResponse(c, nil, errors.NewAuthTokenError(errors.TokenNotFound))
 			return nil
 		}
+
+		userID, err := m.jwtService.ValidateAccessToken(accessToken)
+		if err != nil {
+			userID, err = m.jwtService.ValidateRefreshToken(refreshToken)
+			if err != nil {
+				response.MakeErrorResponse(c, nil, errors.NewAuthTokenError(errors.InvalidToken))
+				return nil
+			}
+		}
+
+		var tokenPair jwtAuth.TokenPair
+		tokenPair, err = m.jwtService.GenerateTokenPair(userID)
+		if err != nil {
+
+			response.MakeErrorResponse(c, nil, errors.NewInternalServiceError("Token generate error", err))
+			return nil
+		}
+
+		expires := time.Now().Add(m.jwtService.GetAccessTTL())
+		c.Cookie(&fiber.Cookie{
+			Name:     jwtAuth.AccessTokenCookieName,
+			Value:    tokenPair.AccessToken,
+			Expires:  expires,
+			HTTPOnly: true,
+			Secure:   true,
+			SameSite: "Lax",
+		})
 
 		ctx := context.WithValue(c.Context(), UserIDContextKey, userID)
 		c.SetContext(ctx)

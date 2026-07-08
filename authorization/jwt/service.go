@@ -49,6 +49,10 @@ func (s *Service) GenerateTokenPair(userID int) (TokenPair, error) {
 	}, nil
 }
 
+func (s *Service) GetAccessTTL() time.Duration {
+	return s.accessTTL
+}
+
 func (s *Service) ValidateAccessToken(token string) (int, error) {
 	return s.validateByType(token, AccessTokenType)
 }
