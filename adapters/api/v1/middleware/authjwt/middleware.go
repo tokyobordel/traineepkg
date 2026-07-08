@@ -3,12 +3,11 @@ package authjwt
 import (
 	"context"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 
 	"github.com/tokyobordel/traineepkg/adapters/api/v1/response"
 	jwtAuth "github.com/tokyobordel/traineepkg/authorization/jwt"
 	"github.com/tokyobordel/traineepkg/errors"
-	"github.com/tokyobordel/traineepkg/logger"
 )
 
 type ctxKey string
@@ -17,32 +16,30 @@ const UserIDContextKey ctxKey = "authUserID"
 
 type Middleware struct {
 	jwtService *jwtAuth.Service
-	logger     *logger.ContextLogger
 }
 
-func NewMiddleware(jwtService *jwtAuth.Service, logger *logger.ContextLogger) *Middleware {
+func NewMiddleware(jwtService *jwtAuth.Service) *Middleware {
 	return &Middleware{
 		jwtService: jwtService,
-		logger:     logger,
 	}
 }
 
 func (m *Middleware) RequireAccessToken() fiber.Handler {
-	return func(c *fiber.Ctx) error {
+	return func(c fiber.Ctx) error {
 		token := c.Cookies(jwtAuth.AccessTokenCookieName)
 		if token == "" {
-			response.MakeErrorResponse(c, m.logger, errors.NewAuthTokenError(errors.TokenNotFound))
+			response.MakeErrorResponse(c, nil, errors.NewAuthTokenError(errors.TokenNotFound))
 			return nil
 		}
 
 		userID, err := m.jwtService.ValidateAccessToken(token)
 		if err != nil {
-			response.MakeErrorResponse(c, m.logger, errors.NewAuthTokenError(errors.InvalidToken))
+			response.MakeErrorResponse(c, nil, errors.NewAuthTokenError(errors.InvalidToken))
 			return nil
 		}
 
-		ctx := context.WithValue(c.UserContext(), UserIDContextKey, userID)
-		c.SetUserContext(ctx)
+		ctx := context.WithValue(c.Context(), UserIDContextKey, userID)
+		c.SetContext(ctx)
 		return c.Next()
 	}
 }

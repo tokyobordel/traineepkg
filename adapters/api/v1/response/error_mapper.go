@@ -1,11 +1,11 @@
 package response
 
 import (
+	"log"
 	"net/http"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	"github.com/tokyobordel/traineepkg/errors"
-	"github.com/tokyobordel/traineepkg/logger"
 )
 
 // mapDomainErrorToHTTPStatus сопоставляет доменные ошибки с HTTP статус кодами
@@ -48,7 +48,7 @@ func mapDomainErrorToHTTPStatus(err errors.DomainError) int {
 }
 
 // makeErrorResponse создает ответ с ошибкой, автоматически определяя HTTP статус
-func MakeErrorResponse(c *fiber.Ctx, logger *logger.ContextLogger, err error) {
+func MakeErrorResponse(c fiber.Ctx, logger *log.Logger, err error) {
 	_ = logger
 
 	if domainErr, ok := err.(errors.DomainError); ok {

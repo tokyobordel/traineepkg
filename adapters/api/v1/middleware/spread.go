@@ -4,7 +4,7 @@ import (
 	contextTrace "github.com/tokyobordel/traineepkg/context/trace"
 	"github.com/tokyobordel/traineepkg/logger"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type SpreadMiddleware struct {
@@ -18,15 +18,15 @@ func NewSpreadMiddleware(logger *logger.ContextLogger) *SpreadMiddleware {
 // AddSpreadInContext автоматически добавляет spread ID в контекст каждого запроса
 func (m *SpreadMiddleware) AddSpreadInContext() fiber.Handler {
 
-	return func(c *fiber.Ctx) error {
-		ctx := contextTrace.WithSpread(c.UserContext(), "")
-		c.SetUserContext(ctx)
+	return func(c fiber.Ctx) error {
+		ctx := contextTrace.WithSpread(c.Context(), "")
+		c.SetContext(ctx)
 
-		spreadID, ok := contextTrace.SpreadFromContext(c.UserContext())
+		spreadID, ok := contextTrace.SpreadFromContext(c.Context())
 		if !ok {
-			m.logger.Errorf(c.UserContext(), "Error adding spread identifier to context")
+			m.logger.Errorf(c.Context(), "Error adding spread identifier to context")
 		}
-		m.logger.Infof(c.UserContext(), "Spread identifier added %v", spreadID)
+		m.logger.Infof(c.Context(), "Spread identifier added %v", spreadID)
 		return c.Next()
 	}
 }

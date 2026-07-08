@@ -1,6 +1,6 @@
 package auth
 
-import "github.com/gofiber/fiber/v2"
+import "github.com/gofiber/fiber/v3"
 
 func SetupRouter(app *fiber.App, handler *Handler) {
 	authGroup := app.Group("/api/auth")
