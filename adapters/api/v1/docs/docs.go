@@ -302,6 +302,12 @@ const docTemplate = `{
         "auth.CredentialsRequest": {
             "type": "object",
             "properties": {
+                "data": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
                 "login": {
                     "type": "string",
                     "example": "john_doe"
@@ -315,7 +321,12 @@ const docTemplate = `{
         "models.User": {
             "type": "object",
             "properties": {
-                "data": {},
+                "data": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
                 "id": {
                     "type": "integer",
                     "example": 1

@@ -7,6 +7,10 @@ definitions:
     type: object
   auth.CredentialsRequest:
     properties:
+      data:
+        additionalProperties:
+          type: string
+        type: object
       login:
         example: john_doe
         type: string
@@ -16,7 +20,10 @@ definitions:
     type: object
   models.User:
     properties:
-      data: {}
+      data:
+        additionalProperties:
+          type: string
+        type: object
       id:
         example: 1
         type: integer

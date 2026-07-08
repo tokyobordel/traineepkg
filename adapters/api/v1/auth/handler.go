@@ -50,7 +50,7 @@ func (h *Handler) Register(c fiber.Ctx) error {
 		return nil
 	}
 
-	user, err := h.authService.Register(req.Pass, req.Login)
+	user, err := h.authService.Register(req.Pass, req.Login, req.Data)
 	if err != nil {
 		response.MakeErrorResponse(c, h.logger, err)
 		return nil

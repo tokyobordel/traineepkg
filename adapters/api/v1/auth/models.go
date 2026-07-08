@@ -4,8 +4,9 @@ import "github.com/tokyobordel/traineepkg/models"
 
 // CredentialsRequest учётные данные пользователя.
 type CredentialsRequest struct {
-	Login string `json:"login" example:"john_doe"`
-	Pass  string `json:"pass" example:"secret123"`
+	Login string            `json:"login" example:"john_doe"`
+	Pass  string            `json:"pass" example:"secret123"`
+	Data  map[string]string `json:"data,omitempty"`
 }
 
 // AuthResponse данные аутентифицированного пользователя.
