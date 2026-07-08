@@ -1,0 +1,236 @@
+basePath: /api
+definitions:
+  auth.AuthResponse:
+    properties:
+      user:
+        $ref: '#/definitions/models.User'
+    type: object
+  auth.CredentialsRequest:
+    properties:
+      login:
+        example: john_doe
+        type: string
+      pass:
+        example: secret123
+        type: string
+    type: object
+  models.User:
+    properties:
+      data: {}
+      id:
+        example: 1
+        type: integer
+      login:
+        example: john_doe
+        type: string
+    type: object
+  response.Envelope:
+    properties:
+      data: {}
+      err_message:
+        example: ""
+        type: string
+      spread_id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+  response.ErrorEnvelope:
+    properties:
+      data: {}
+      err_message:
+        example: invalid request body
+        type: string
+      spread_id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      success:
+        example: false
+        type: boolean
+    type: object
+  response.MessageData:
+    properties:
+      message:
+        example: logout successful
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    name: API Support
+  description: HTTP API аутентификации пакета traineepkg.
+  license:
+    name: MIT
+  termsOfService: http://swagger.io/terms/
+  title: TraineePkg Auth API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Аутентифицирует пользователя и устанавливает access/refresh токены
+        в HTTP-only cookies
+      parameters:
+      - description: Учётные данные
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.CredentialsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/auth.AuthResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorEnvelope'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorEnvelope'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorEnvelope'
+      summary: Вход в систему
+      tags:
+      - auth
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Удаляет access и refresh токены из cookies
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.MessageData'
+              type: object
+      summary: Выход из системы
+      tags:
+      - auth
+  /auth/me:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает данные текущего пользователя по access_token cookie
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/auth.AuthResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorEnvelope'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorEnvelope'
+      security:
+      - CookieAuth: []
+      summary: Текущий пользователь
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Обновляет пару access/refresh токенов по refresh_token cookie
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/auth.AuthResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorEnvelope'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorEnvelope'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorEnvelope'
+      summary: Обновление токенов
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Создаёт нового пользователя по логину и паролю
+      parameters:
+      - description: Учётные данные
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.CredentialsRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/auth.AuthResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorEnvelope'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/response.ErrorEnvelope'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorEnvelope'
+      summary: Регистрация пользователя
+      tags:
+      - auth
+securityDefinitions:
+  CookieAuth:
+    in: cookie
+    name: access_token
+    type: apiKey
+swagger: "2.0"

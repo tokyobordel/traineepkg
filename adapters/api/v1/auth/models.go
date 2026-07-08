@@ -2,11 +2,13 @@ package auth
 
 import "github.com/tokyobordel/traineepkg/models"
 
-type credentialsRequest struct {
-	Login string `json:"login"`
-	Pass  string `json:"pass"`
+// CredentialsRequest учётные данные пользователя.
+type CredentialsRequest struct {
+	Login string `json:"login" example:"john_doe"`
+	Pass  string `json:"pass" example:"secret123"`
 }
 
-type authResponse struct {
+// AuthResponse данные аутентифицированного пользователя.
+type AuthResponse struct {
 	User models.User `json:"user"`
 }
