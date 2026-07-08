@@ -27,3 +27,22 @@ handler := auth.NewHandler(myAuthService, jwt, log, 15*time.Minute, 7*24*time.Ho
 auth.SetupRouter(app, handler)
 authSwagger.SetupRouter(app) // /auth/swagger/index.html
 ```
+
+
+## - Добавление защищенного end-point
+
+```go
+import (
+
+	authMiddleware "github.com/tokyobordel/traineepkg/adapters/api/v1/middleware/authjwt"
+
+	"github.com/gofiber/fiber/v2"
+)
+
+var app *fiber.App
+//...
+api := app.Group("/api")
+protected := api.Group("/", h.authMiddleware.RequireAccessToken())
+protected.Get("/admin/image/:id", h.GetImageByIdAdmin)
+
+```
