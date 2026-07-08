@@ -97,6 +97,30 @@ func (h *Handler) Refresh(c *fiber.Ctx) error {
 	return nil
 }
 
+func (h *Handler) GetMe(c *fiber.Ctx) error {
+	accessToken := c.Cookies(jwtAuth.AccessTokenCookieName)
+	if accessToken == "" {
+		response.MakeErrorResponse(c, h.logger, errors.NewAuthTokenError(errors.TokenNotFound))
+		return nil
+	}
+
+	userID, err := h.jwtService.ValidateAccessToken(accessToken)
+	if err != nil {
+		response.MakeErrorResponse(c, h.logger, errors.NewAuthTokenError(errors.InvalidToken))
+		return nil
+	}
+
+	user, getMeErr := h.authService.GetMe(userID)
+	if getMeErr != nil {
+		response.MakeErrorResponse(c, h.logger, getMeErr)
+		return nil
+	}
+
+	response.MakeSuccessResponse(c, authResponse{User: user})
+
+	return nil
+}
+
 func (h *Handler) Logout(c *fiber.Ctx) error {
 	c.Cookie(&fiber.Cookie{
 		Name:     jwtAuth.AccessTokenCookieName,

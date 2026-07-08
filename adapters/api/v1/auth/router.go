@@ -8,4 +8,5 @@ func SetupRouter(app *fiber.App, handler *Handler) {
 	authGroup.Post("/login", handler.Login)
 	authGroup.Post("/refresh", handler.Refresh)
 	authGroup.Post("/logout", handler.Logout)
+	authGroup.Post("/me", handler.GetMe)
 }
