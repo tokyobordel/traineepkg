@@ -99,3 +99,26 @@ admin.Delete("/users/:id", deleteUser)
 | GET | `/api/auth/me` | проверяет cookie внутри хендлера |
 
 Эндпоинт `/api/auth/me` защищён логикой самого хендлера. Остальные защищённые маршруты приложения — через `authjwt` middleware.
+
+
+
+
+## Установка документации Swagger
+
+```go
+package swagger
+
+import (
+	"github.com/gofiber/fiber/v2"
+	fiberSwagger "github.com/gofiber/swagger"
+
+	_ "github.com/tokyobordel/traineepkg/adapters/api/v1/docs"
+)
+
+func SetupRouter(app *fiber.App) {
+	app.Get("/auth/swagger/*", fiberSwagger.New(fiberSwagger.Config{
+		InstanceName: "swagger",
+	}))
+}
+
+```
