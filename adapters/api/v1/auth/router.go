@@ -17,9 +17,7 @@ func SetupRouter(app *fiber.App, handler *Handler) {
 	defGroup.Post("/logout", handler.Logout)
 
 	authMiddleware := authjwt.NewMiddleware(handler.jwtService)
-	protectedGroup := app.Group("/", authMiddleware.RequireAccessToken())
-
-	protectedGroup.Get("/me", handler.GetMe)
+	defGroup.Get("/me", authMiddleware.RequireAccessToken(), handler.GetMe)
 }
 
 // SetupAuthRouter подключает Swagger UI документации auth API по адресу /auth/swagger.
