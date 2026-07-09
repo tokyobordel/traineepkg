@@ -1,6 +1,11 @@
 package auth
 
-import "github.com/gofiber/fiber/v3"
+import (
+	swaggo "github.com/gofiber/contrib/v3/swaggo"
+	"github.com/gofiber/fiber/v3"
+
+	_ "github.com/tokyobordel/traineepkg/adapters/api/v1/docs"
+)
 
 func SetupRouter(app *fiber.App, handler *Handler) {
 	authGroup := app.Group("/api/auth")
@@ -9,4 +14,8 @@ func SetupRouter(app *fiber.App, handler *Handler) {
 	authGroup.Post("/refresh", handler.Refresh)
 	authGroup.Post("/logout", handler.Logout)
 	authGroup.Get("/me", handler.GetMe)
+}
+
+func SetupAuthRouter(app *fiber.App) {
+	app.Get("/auth/swagger/*", swaggo.HandlerDefault)
 }
