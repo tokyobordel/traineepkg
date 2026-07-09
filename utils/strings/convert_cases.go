@@ -1,3 +1,4 @@
+// Package strings предоставляет утилиты преобразования строковых форматов.
 package strings
 
 import (
@@ -8,6 +9,7 @@ import (
 	"github.com/tokyobordel/traineepkg/errors"
 )
 
+// PascalToUpperSnakeCase преобразует строку из PascalCase в UPPER_SNAKE_CASE.
 func PascalToUpperSnakeCase(input string) (string, errors.DomainError) {
 	if input == "" {
 		return "", errors.NewInvalidParametersError("input", input, "входная строка не может быть пустой")

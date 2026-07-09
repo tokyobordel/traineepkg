@@ -1,3 +1,4 @@
+// Package swagger подключает Swagger UI к Fiber-приложению.
 package swagger
 
 import (

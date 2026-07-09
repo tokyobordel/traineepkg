@@ -1,26 +1,25 @@
+// Package trace предоставляет функции работы с идентификатором spread в context.Context.
 package trace
 
 import (
 	"context"
 
 	pkgContext "github.com/tokyobordel/traineepkg/context"
-	"github.com/tokyobordel/traineepkg/trace"
+	pkgTrace "github.com/tokyobordel/traineepkg/trace"
 )
 
+// SpreadKey — ключ context.Context для хранения spread ID.
 const SpreadKey pkgContext.CtxKey = "traceSpread"
 
-// Добавить spread в контекст
+// WithSpread добавляет spread в контекст. Если spread пустой, генерируется новый идентификатор.
 func WithSpread(ctx context.Context, spread string) context.Context {
-	/*
-		Добавляет spread в контекст
-		- spread - не обязательный параметр, если не передан, то генерируется новый spread
-	*/
 	if spread == "" {
-		spread = trace.GenerateSpreadId()
+		spread = pkgTrace.GenerateSpreadId()
 	}
 	return context.WithValue(ctx, SpreadKey, spread)
 }
 
+// SpreadFromContext извлекает spread ID из контекста.
 func SpreadFromContext(ctx context.Context) (string, bool) {
 	spread := ctx.Value(SpreadKey)
 
@@ -28,10 +27,9 @@ func SpreadFromContext(ctx context.Context) (string, bool) {
 		return "", false
 	}
 
-	// Безопасный type assertion
 	if str, ok := spread.(string); ok {
 		return str, true
-	} else {
-		return "", false
 	}
+
+	return "", false
 }

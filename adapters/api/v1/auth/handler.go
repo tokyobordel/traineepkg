@@ -1,3 +1,4 @@
+// Package auth предоставляет HTTP-обработчики и маршруты аутентификации для Fiber.
 package auth
 
 import (
@@ -6,12 +7,14 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 
+	"github.com/tokyobordel/traineepkg/adapters/api/v1/middleware/authjwt"
 	"github.com/tokyobordel/traineepkg/adapters/api/v1/response"
 	authService "github.com/tokyobordel/traineepkg/auth/service"
 	jwtAuth "github.com/tokyobordel/traineepkg/authorization/jwt"
 	"github.com/tokyobordel/traineepkg/errors"
 )
 
+// Handler обрабатывает HTTP-запросы аутентификации.
 type Handler struct {
 	authService authService.IAuthService
 	jwtService  *jwtAuth.Service
@@ -20,6 +23,7 @@ type Handler struct {
 	refreshTTL  time.Duration
 }
 
+// NewHandler создаёт HTTP-обработчик аутентификации.
 func NewHandler(authService authService.IAuthService, jwtService *jwtAuth.Service, accessTTL time.Duration, refreshTTL time.Duration) *Handler {
 	return &Handler{
 		authService: authService,
@@ -148,15 +152,16 @@ func (h *Handler) Refresh(c fiber.Ctx) error {
 //	@Failure		404	{object}	response.ErrorEnvelope
 //	@Router			/auth/me [get]
 func (h *Handler) GetMe(c fiber.Ctx) error {
-	accessToken := c.Cookies(jwtAuth.AccessTokenCookieName)
-	if accessToken == "" {
-		response.MakeErrorResponse(c, h.logger, errors.NewAuthTokenError(errors.TokenNotFound))
+	// 1. Проверяем наличие и тип
+	userIDVal := c.Context().Value(authjwt.UserIDContextKey)
+	if userIDVal == nil {
+		response.MakeErrorResponse(c, h.logger, errors.NewAccessDeniedError("unauthorized"))
 		return nil
 	}
 
-	userID, err := h.jwtService.ValidateAccessToken(accessToken)
-	if err != nil {
-		response.MakeErrorResponse(c, h.logger, errors.NewAuthTokenError(errors.InvalidToken))
+	userID, ok := userIDVal.(int)
+	if !ok {
+		response.MakeErrorResponse(c, h.logger, errors.NewInternalServiceError("invalid user ID type in context", nil))
 		return nil
 	}
 
@@ -167,7 +172,6 @@ func (h *Handler) GetMe(c fiber.Ctx) error {
 	}
 
 	response.MakeSuccessResponse(c, AuthResponse{User: user})
-
 	return nil
 }
 

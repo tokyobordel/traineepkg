@@ -1,3 +1,4 @@
+// Package authjwt предоставляет JWT-middleware для защиты HTTP-маршрутов.
 package authjwt
 
 import (
@@ -13,18 +14,22 @@ import (
 
 type ctxKey string
 
+// UserIDContextKey — ключ context.Context для идентификатора аутентифицированного пользователя.
 const UserIDContextKey ctxKey = "authUserID"
 
+// Middleware проверяет JWT-токены и обновляет access cookie при необходимости.
 type Middleware struct {
 	jwtService *jwtAuth.Service
 }
 
+// NewMiddleware создаёт JWT-middleware с указанным сервисом токенов.
 func NewMiddleware(jwtService *jwtAuth.Service) *Middleware {
 	return &Middleware{
 		jwtService: jwtService,
 	}
 }
 
+// RequireAccessToken возвращает Fiber-handler, требующий валидный access- или refresh-токен.
 func (m *Middleware) RequireAccessToken() fiber.Handler {
 	return func(c fiber.Ctx) error {
 		accessToken := c.Cookies(jwtAuth.AccessTokenCookieName)
@@ -66,6 +71,7 @@ func (m *Middleware) RequireAccessToken() fiber.Handler {
 	}
 }
 
+// UserIDFromContext извлекает идентификатор пользователя из контекста запроса.
 func UserIDFromContext(ctx context.Context) (int, bool) {
 	userID, ok := ctx.Value(UserIDContextKey).(int)
 	if !ok {

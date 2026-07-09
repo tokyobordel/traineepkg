@@ -1,3 +1,4 @@
+// Package logger предоставляет контекстный логгер с поддержкой spread ID.
 package logger
 
 import (

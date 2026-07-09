@@ -1,12 +1,13 @@
+// Package errors предоставляет унифицированные доменные ошибки и вспомогательные функции для их проверки.
 package errors
 
-// DomainError - общий интерфейс для всех доменных ошибок
+// DomainError — общий интерфейс для всех доменных ошибок пакета.
 type DomainError interface {
 	error
 	Type() string
 }
 
-// ErrorType - типы ошибок
+// ErrorTypeNotFound обозначает отсутствие запрошенного ресурса.
 const (
 	ErrorTypeNotFound          = "NOT_FOUND"
 	ErrorTypeUniqueConstraint  = "UNIQUE_CONSTRAINT"

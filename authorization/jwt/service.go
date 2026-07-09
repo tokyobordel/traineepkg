@@ -7,23 +7,31 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+// Claims описывает полезную нагрузку JWT-токена пользователя.
 type Claims struct {
-	UserID    int    `json:"user_id"`
+	// UserID — идентификатор пользователя.
+	UserID int `json:"user_id"`
+	// TokenType — тип токена: access или refresh.
 	TokenType string `json:"token_type"`
 	jwt.RegisteredClaims
 }
 
+// TokenPair содержит пару access- и refresh-токенов.
 type TokenPair struct {
-	AccessToken  string
+	// AccessToken — короткоживущий токен доступа.
+	AccessToken string
+	// RefreshToken — долгоживущий токен обновления.
 	RefreshToken string
 }
 
+// Service инкапсулирует создание и проверку JWT-токенов.
 type Service struct {
 	secret     []byte
 	accessTTL  time.Duration
 	refreshTTL time.Duration
 }
 
+// NewService создаёт сервис JWT с заданным секретом и временем жизни токенов.
 func NewService(secret string, accessTTL time.Duration, refreshTTL time.Duration) *Service {
 	return &Service{
 		secret:     []byte(secret),
@@ -32,6 +40,7 @@ func NewService(secret string, accessTTL time.Duration, refreshTTL time.Duration
 	}
 }
 
+// GenerateTokenPair создаёт access- и refresh-токены для пользователя userID.
 func (s *Service) GenerateTokenPair(userID int) (TokenPair, error) {
 	accessToken, err := s.GenerateAccess(userID)
 	if err != nil {
@@ -49,6 +58,7 @@ func (s *Service) GenerateTokenPair(userID int) (TokenPair, error) {
 	}, nil
 }
 
+// GenerateAccess создаёт access-токен для пользователя userID.
 func (s *Service) GenerateAccess(userID int) (string, error) {
 	accessToken, err := s.generateToken(userID, AccessTokenType, s.accessTTL)
 	if err != nil {
@@ -57,6 +67,7 @@ func (s *Service) GenerateAccess(userID int) (string, error) {
 	return accessToken, nil
 }
 
+// GenerateRefresh создаёт refresh-токен для пользователя userID.
 func (s *Service) GenerateRefresh(userID int) (string, error) {
 	accessToken, err := s.generateToken(userID, RefreshTokenType, s.refreshTTL)
 	if err != nil {
@@ -65,22 +76,27 @@ func (s *Service) GenerateRefresh(userID int) (string, error) {
 	return accessToken, nil
 }
 
+// GetAccessTTL возвращает время жизни access-токена.
 func (s *Service) GetAccessTTL() time.Duration {
 	return s.accessTTL
 }
 
+// GetRefreshTTL возвращает время жизни refresh-токена.
 func (s *Service) GetRefreshTTL() time.Duration {
 	return s.refreshTTL
 }
 
+// GetSecret возвращает секрет подписи JWT.
 func (s *Service) GetSecret() []byte {
 	return s.secret
 }
 
+// ValidateAccessToken проверяет access-токен и возвращает идентификатор пользователя.
 func (s *Service) ValidateAccessToken(token string) (int, error) {
 	return s.validateByType(token, AccessTokenType)
 }
 
+// ValidateRefreshToken проверяет refresh-токен и возвращает идентификатор пользователя.
 func (s *Service) ValidateRefreshToken(token string) (int, error) {
 	return s.validateByType(token, RefreshTokenType)
 }

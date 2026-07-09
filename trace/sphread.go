@@ -1,3 +1,4 @@
+// Package trace предоставляет генерацию и разбор идентификаторов spread для трассировки.
 package trace
 
 import (

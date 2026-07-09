@@ -7,6 +7,7 @@ import (
 	_ "github.com/tokyobordel/traineepkg/adapters/api/v1/docs"
 )
 
+// SetupRouter регистрирует публичные маршруты аутентификации под префиксом /api/auth.
 func SetupRouter(app *fiber.App, handler *Handler) {
 	authGroup := app.Group("/api/auth")
 	authGroup.Post("/register", handler.Register)
@@ -16,6 +17,7 @@ func SetupRouter(app *fiber.App, handler *Handler) {
 	authGroup.Get("/me", handler.GetMe)
 }
 
+// SetupAuthRouter подключает Swagger UI документации auth API по адресу /auth/swagger.
 func SetupAuthRouter(app *fiber.App) {
 	app.Get("/auth/swagger/*", swaggo.HandlerDefault)
 }

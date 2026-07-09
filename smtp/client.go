@@ -1,7 +1,5 @@
+// Package smtp предоставляет клиент для отправки email-уведомлений.
 package smtp
-
-// Пакет email используется для реализации логики отправки уведомлений пользователям
-// на их почту(-ы)
 
 import (
 	"crypto/tls"
@@ -10,17 +8,19 @@ import (
 	"strings"
 )
 
-// Структура SmtpClient нужна для передачи параметров почты, с которой будет
-// вестись рассылка
+// SmtpClient хранит параметры подключения к SMTP-серверу.
 type SmtpClient struct {
-	Email    string // Почта для рассылки
-	Password string // Пароль от почты
-	Host     string // Хост
-	Port     string // Порт
+	// Email — адрес почтового ящика отправителя.
+	Email string
+	// Password — пароль почтового ящика отправителя.
+	Password string
+	// Host — хост SMTP-сервера.
+	Host string
+	// Port — порт SMTP-сервера.
+	Port string
 }
 
-// Функция NewSmtpClient используется для создания экземпляра структуры NewSmtpClient
-// Она возращает созданный экземпляр стурктуры NewSmtpClient
+// NewSmtpClient создаёт клиент SMTP с заданными учётными данными и адресом сервера.
 func NewSmtpClient(e string, p string, h string, port string) *SmtpClient {
 	return &SmtpClient{
 		Email:    e,
@@ -30,12 +30,8 @@ func NewSmtpClient(e string, p string, h string, port string) *SmtpClient {
 	}
 }
 
-// Функция SendMessage используется для отправки писем с уведомлениями
-// На вход получаем:
-// receiverEmails - массив из адресов почт, куда придут уведмоения
-// message - текст письма
-// notify_type - тип уведомления
-// На выходе получаем лог об успешности отправки
+// SendMessage отправляет email-уведомление списку получателей receiverEmails.
+// Параметр notify_type определяет тему письма.
 func (s SmtpClient) SendMessage(receiverEmails []string, message string, notify_type string) {
 	tlsConfig := &tls.Config{
 		ServerName: s.Host,
