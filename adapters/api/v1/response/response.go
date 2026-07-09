@@ -1,3 +1,4 @@
+// Package response формирует унифицированные HTTP-ответы Fiber API.
 package response
 
 import (
@@ -25,10 +26,12 @@ func makeResponse(c fiber.Ctx, status int, data interface{}, success bool, errMe
 	c.Status(status).JSON(makeEnvelope(c, data, success, errMessage))
 }
 
+// MakeSuccessResponse отправляет успешный JSON-ответ со статусом 200.
 func MakeSuccessResponse(c fiber.Ctx, data interface{}) {
 	makeResponse(c, http.StatusOK, data, true, "")
 }
 
+// MakeSuccessResponseWithStatus отправляет успешный JSON-ответ с указанным HTTP-статусом.
 func MakeSuccessResponseWithStatus(c fiber.Ctx, status int, data interface{}) {
 	makeResponse(c, status, data, true, "")
 }

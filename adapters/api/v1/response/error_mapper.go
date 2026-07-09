@@ -47,7 +47,7 @@ func mapDomainErrorToHTTPStatus(err errors.DomainError) int {
 	}
 }
 
-// makeErrorResponse создает ответ с ошибкой, автоматически определяя HTTP статус
+// MakeErrorResponse формирует JSON-ответ с ошибкой и подходящим HTTP-статусом.
 func MakeErrorResponse(c fiber.Ctx, logger *log.Logger, err error) {
 	_ = logger
 
