@@ -33,12 +33,12 @@ func NewService(secret string, accessTTL time.Duration, refreshTTL time.Duration
 }
 
 func (s *Service) GenerateTokenPair(userID int) (TokenPair, error) {
-	accessToken, err := s.generateToken(userID, AccessTokenType, s.accessTTL)
+	accessToken, err := s.GenerateAccess(userID)
 	if err != nil {
 		return TokenPair{}, err
 	}
 
-	refreshToken, err := s.generateToken(userID, RefreshTokenType, s.refreshTTL)
+	refreshToken, err := s.GenerateRefresh(userID)
 	if err != nil {
 		return TokenPair{}, err
 	}
@@ -49,8 +49,32 @@ func (s *Service) GenerateTokenPair(userID int) (TokenPair, error) {
 	}, nil
 }
 
+func (s *Service) GenerateAccess(userID int) (string, error) {
+	accessToken, err := s.generateToken(userID, AccessTokenType, s.accessTTL)
+	if err != nil {
+		return "", err
+	}
+	return accessToken, nil
+}
+
+func (s *Service) GenerateRefresh(userID int) (string, error) {
+	accessToken, err := s.generateToken(userID, RefreshTokenType, s.refreshTTL)
+	if err != nil {
+		return "", err
+	}
+	return accessToken, nil
+}
+
 func (s *Service) GetAccessTTL() time.Duration {
 	return s.accessTTL
+}
+
+func (s *Service) GetRefreshTTL() time.Duration {
+	return s.refreshTTL
+}
+
+func (s *Service) GetSecret() []byte {
+	return s.secret
 }
 
 func (s *Service) ValidateAccessToken(token string) (int, error) {

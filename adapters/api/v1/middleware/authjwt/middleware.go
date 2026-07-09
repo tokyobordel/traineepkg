@@ -28,13 +28,9 @@ func NewMiddleware(jwtService *jwtAuth.Service) *Middleware {
 func (m *Middleware) RequireAccessToken() fiber.Handler {
 	return func(c fiber.Ctx) error {
 		accessToken := c.Cookies(jwtAuth.AccessTokenCookieName)
-		if accessToken == "" {
-			response.MakeErrorResponse(c, nil, errors.NewAuthTokenError(errors.TokenNotFound))
-			return nil
-		}
-
 		refreshToken := c.Cookies(jwtAuth.RefreshTokenCookieName)
-		if accessToken == "" {
+
+		if refreshToken == "" {
 			response.MakeErrorResponse(c, nil, errors.NewAuthTokenError(errors.TokenNotFound))
 			return nil
 		}
@@ -48,10 +44,8 @@ func (m *Middleware) RequireAccessToken() fiber.Handler {
 			}
 		}
 
-		var tokenPair jwtAuth.TokenPair
-		tokenPair, err = m.jwtService.GenerateTokenPair(userID)
+		newAccessToken, err := m.jwtService.GenerateAccess(userID)
 		if err != nil {
-
 			response.MakeErrorResponse(c, nil, errors.NewInternalServiceError("Token generate error", err))
 			return nil
 		}
@@ -59,7 +53,7 @@ func (m *Middleware) RequireAccessToken() fiber.Handler {
 		expires := time.Now().Add(m.jwtService.GetAccessTTL())
 		c.Cookie(&fiber.Cookie{
 			Name:     jwtAuth.AccessTokenCookieName,
-			Value:    tokenPair.AccessToken,
+			Value:    newAccessToken,
 			Expires:  expires,
 			HTTPOnly: true,
 			Secure:   true,
