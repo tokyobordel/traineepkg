@@ -34,6 +34,17 @@ func NewHandler(authService authService.IAuthService, jwtService *jwtAuth.Servic
 	}
 }
 
+// NewHandler создаёт HTTP-обработчик аутентификации с указанием кастомного логгера
+func NewHandlerWithLogger(authService authService.IAuthService, jwtService *jwtAuth.Service, accessTTL time.Duration, refreshTTL time.Duration, logger *log.Logger) *Handler {
+	return &Handler{
+		authService: authService,
+		jwtService:  jwtService,
+		logger:      logger,
+		accessTTL:   accessTTL,
+		refreshTTL:  refreshTTL,
+	}
+}
+
 // Register godoc
 //
 //	@Summary		Регистрация пользователя
@@ -86,7 +97,7 @@ func (h *Handler) Login(c fiber.Ctx) error {
 
 	user, err := h.authService.Login(req.Pass, req.Login)
 	if err != nil {
-		response.MakeErrorResponse(c, h.logger, err)
+		response.MakeErrorResponse(c, h.logger, errors.NewAccessDeniedError(err.Error()))
 		return nil
 	}
 
