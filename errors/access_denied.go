@@ -10,7 +10,7 @@ type AccessDeniedError struct {
 
 // Error возвращает текстовое представление ошибки.
 func (e *AccessDeniedError) Error() string {
-	return fmt.Sprintf("Отказано в доступе к ресурсу %v", e.Resurse)
+	return fmt.Sprintf("Отказано в доступе к ресурсу: %v", e.Resurse)
 }
 
 // Type возвращает тип доменной ошибки.

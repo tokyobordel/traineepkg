@@ -67,7 +67,7 @@ func (h *Handler) Register(c fiber.Ctx) error {
 
 	user, err := h.authService.Register(req.Pass, req.Login, req.Data)
 	if err != nil {
-		response.MakeErrorResponse(c, h.logger, err)
+		response.MakeErrorResponse(c, h.logger, errors.NewAccessDeniedError(err.Error()))
 		return nil
 	}
 
@@ -137,7 +137,7 @@ func (h *Handler) Refresh(c fiber.Ctx) error {
 
 	user, getMeErr := h.authService.GetMe(userID)
 	if getMeErr != nil {
-		response.MakeErrorResponse(c, h.logger, getMeErr)
+		response.MakeErrorResponse(c, h.logger, errors.NewAccessDeniedError(getMeErr.Error()))
 		return nil
 	}
 
@@ -178,7 +178,7 @@ func (h *Handler) GetMe(c fiber.Ctx) error {
 
 	user, getMeErr := h.authService.GetMe(userID)
 	if getMeErr != nil {
-		response.MakeErrorResponse(c, h.logger, getMeErr)
+		response.MakeErrorResponse(c, h.logger, errors.NewAccessDeniedError(getMeErr.Error()))
 		return nil
 	}
 
