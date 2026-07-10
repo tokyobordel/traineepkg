@@ -123,7 +123,7 @@ func (h *Handler) Login(c fiber.Ctx) error {
 //	@Failure		500	{object}	response.ErrorEnvelope
 //	@Router			/auth/refresh [post]
 func (h *Handler) Refresh(c fiber.Ctx) error {
-	refreshToken := c.Cookies(jwtAuth.RefreshTokenCookieName)
+	refreshToken := c.Cookies(jwtAuth.RefreshTokenCookieNameDefault)
 	if refreshToken == "" {
 		response.MakeErrorResponse(c, h.logger, errors.NewAuthTokenError(errors.TokenNotFound))
 		return nil
@@ -197,7 +197,7 @@ func (h *Handler) GetMe(c fiber.Ctx) error {
 //	@Router			/auth/logout [post]
 func (h *Handler) Logout(c fiber.Ctx) error {
 	c.Cookie(&fiber.Cookie{
-		Name:     jwtAuth.AccessTokenCookieName,
+		Name:     h.jwtService.GetAccessTokenCookieName(),
 		Value:    "",
 		Expires:  time.Unix(0, 0),
 		MaxAge:   -1,
@@ -205,7 +205,7 @@ func (h *Handler) Logout(c fiber.Ctx) error {
 		HTTPOnly: true,
 	})
 	c.Cookie(&fiber.Cookie{
-		Name:     jwtAuth.RefreshTokenCookieName,
+		Name:     h.jwtService.GetRefreshTokenCookieName(),
 		Value:    "",
 		Expires:  time.Unix(0, 0),
 		MaxAge:   -1,
@@ -224,7 +224,7 @@ func (h *Handler) setTokenCookies(c fiber.Ctx, userID int) bool {
 	}
 
 	c.Cookie(&fiber.Cookie{
-		Name:     jwtAuth.AccessTokenCookieName,
+		Name:     h.jwtService.GetAccessTokenCookieName(),
 		Value:    tokenPair.AccessToken,
 		Path:     "/",
 		MaxAge:   int(h.accessTTL.Seconds()),
@@ -232,7 +232,7 @@ func (h *Handler) setTokenCookies(c fiber.Ctx, userID int) bool {
 		Secure:   false,
 	})
 	c.Cookie(&fiber.Cookie{
-		Name:     jwtAuth.RefreshTokenCookieName,
+		Name:     h.jwtService.GetRefreshTokenCookieName(),
 		Value:    tokenPair.RefreshToken,
 		Path:     "/",
 		MaxAge:   int(h.refreshTTL.Seconds()),

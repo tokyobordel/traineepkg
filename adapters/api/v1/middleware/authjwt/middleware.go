@@ -32,8 +32,8 @@ func NewMiddleware(jwtService *jwtAuth.Service) *Middleware {
 // RequireAccessToken возвращает Fiber-handler, требующий валидный access- или refresh-токен.
 func (m *Middleware) RequireAccessToken() fiber.Handler {
 	return func(c fiber.Ctx) error {
-		accessToken := c.Cookies(jwtAuth.AccessTokenCookieName)
-		refreshToken := c.Cookies(jwtAuth.RefreshTokenCookieName)
+		accessToken := c.Cookies(m.jwtService.GetAccessTokenCookieName())
+		refreshToken := c.Cookies(m.jwtService.GetRefreshTokenCookieName())
 
 		if refreshToken == "" {
 			response.MakeErrorResponse(c, nil, errors.NewAuthTokenError(errors.TokenNotFound))
@@ -57,7 +57,7 @@ func (m *Middleware) RequireAccessToken() fiber.Handler {
 
 		expires := time.Now().Add(m.jwtService.GetAccessTTL())
 		c.Cookie(&fiber.Cookie{
-			Name:     jwtAuth.AccessTokenCookieName,
+			Name:     m.jwtService.GetAccessTokenCookieName(),
 			Value:    newAccessToken,
 			Expires:  expires,
 			HTTPOnly: true,

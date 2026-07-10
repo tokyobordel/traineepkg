@@ -26,17 +26,32 @@ type TokenPair struct {
 
 // Service инкапсулирует создание и проверку JWT-токенов.
 type Service struct {
-	secret     []byte
-	accessTTL  time.Duration
-	refreshTTL time.Duration
+	secret                 []byte
+	accessTTL              time.Duration
+	refreshTTL             time.Duration
+	accessTokenCookieName  string
+	refreshTokenCookieName string
 }
 
 // NewService создаёт сервис JWT с заданным секретом и временем жизни токенов.
 func NewService(secret string, accessTTL time.Duration, refreshTTL time.Duration) *Service {
 	return &Service{
-		secret:     []byte(secret),
-		accessTTL:  accessTTL,
-		refreshTTL: refreshTTL,
+		secret:                 []byte(secret),
+		accessTTL:              accessTTL,
+		refreshTTL:             refreshTTL,
+		accessTokenCookieName:  AccessTokenCookieNameDefault,
+		refreshTokenCookieName: RefreshTokenCookieNameDefault,
+	}
+}
+
+func NewServiceWithCookieName(secret string, accessTTL time.Duration, refreshTTL time.Duration,
+	accessTokenCookieName string, refreshTokenCookieName string) *Service {
+	return &Service{
+		secret:                 []byte(secret),
+		accessTTL:              accessTTL,
+		refreshTTL:             refreshTTL,
+		accessTokenCookieName:  accessTokenCookieName,
+		refreshTokenCookieName: refreshTokenCookieName,
 	}
 }
 
@@ -84,6 +99,14 @@ func (s *Service) GetAccessTTL() time.Duration {
 // GetRefreshTTL возвращает время жизни refresh-токена.
 func (s *Service) GetRefreshTTL() time.Duration {
 	return s.refreshTTL
+}
+
+func (s *Service) GetAccessTokenCookieName() string {
+	return s.accessTokenCookieName
+}
+
+func (s *Service) GetRefreshTokenCookieName() string {
+	return s.refreshTokenCookieName
 }
 
 // GetSecret возвращает секрет подписи JWT.
